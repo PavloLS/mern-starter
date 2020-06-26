@@ -1,7 +1,15 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import { connect } from 'react-redux'
+import moment from 'moment'
+import { addCommentRequest, fetchComments, deleteCommentRequest, editCommentRequest } from '../../CommentActions'
+import { getComments } from '../../CommentReducer'
 import styles from './PostDetailComments.css'
 
-const PostDetailComments = () => {
+const PostDetailComments = ({comments, dispatch}) => {
+  useEffect(() => {
+    dispatch(fetchComments())
+  }, [])
+
   const [state, setState] = useState({
     name: '',
     comment: '',
@@ -11,15 +19,20 @@ const PostDetailComments = () => {
 
   const handleSubmit = e => {
     e.preventDefault()
-    console.log(state)
+    const data = {
+      author: state.name,
+      comment: state.comment
+    }
+    dispatch(addCommentRequest(data))
   }
 
   const handleChangeField = e => setState({ ...state, [e.target.name]: e.target.value})
 
-  const comments = [
-    {id: 1, author: 'John', date: '25.06.2020', comment: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip exea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.' },
-    {id: 2, author: 'Sara', date: '26.06.2020', comment: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip exea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.' }
-  ]
+  const handleEditComment = (id) => {
+    const data = { id, comment: state.editComment }
+    dispatch(editCommentRequest(data))
+    setState({ ...state, editId: '', editComment: '' })
+  }
 
   return (
     <div>
@@ -28,22 +41,22 @@ const PostDetailComments = () => {
         {comments.length > 0 ? (
           <ul>
             {comments.map(c => (
-              <li key={c.id}>
+              <li key={c._id}>
                 <div className={styles["comment-top"]}>
-                  <span>{c.author}</span> <span>{c.date}</span>
+                  <span>{c.author}</span> <span>{moment(c.dateAdded).format('DD.MM.YYYY')}</span>
                 </div>
                 {
-                  state.editId === c.id
+                  state.editId === c._id
                   ? <textarea className={styles["edit-comment-textarea"]} name="editComment" value={state.editComment} onChange={handleChangeField} />
                   : <p>{c.comment}</p>
                 }
                 <div className={styles["comment-bottom"]}>
-                  {state.editId === c.id ? (
-                    <span>Save</span>
+                  {state.editId === c._id ? (
+                    <span onClick={() => handleEditComment(c._id)}>Save</span>
                   ) : (
                     <React.Fragment>
-                      <span onClick={() => setState({ ...state, editId: c.id, editComment: c.comment })}>Edit</span>
-                      <span>Delete</span>
+                      <span onClick={() => setState({ ...state, editId: c._id, editComment: c.comment })}>Edit</span>
+                      <span onClick={() => dispatch(deleteCommentRequest(c._id))}>Delete</span>
                     </React.Fragment>
                   )}
                 </div>
@@ -78,4 +91,10 @@ const PostDetailComments = () => {
   )
 }
 
-export default PostDetailComments
+const mapStateToProps = state => {
+  return {
+    comments: getComments(state),
+  }
+}
+
+export default connect(mapStateToProps)(PostDetailComments)

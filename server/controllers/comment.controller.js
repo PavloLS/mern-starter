@@ -29,7 +29,7 @@ export function addComment(req, res) {
     res.status(403).end();
   }
 
-  const newComment = new Comment(req.body.comment);
+  const newComment = new Comment(req.body.comment)
 
   // Let's sanitize inputs
   newComment.author = sanitizeHtml(newComment.author);
@@ -50,20 +50,24 @@ export function addComment(req, res) {
  * @returns void
  */
 export function editComment(req, res) {
-  if (!req.body.comment.id || !req.body.comment.comment) {
+  if (!req.body.data.id || !req.body.data.comment) {
     res.status(403).end();
   }
 
-  const editComment = Comment.findById(req.body.comment.id);
-
-  // Let's sanitize inputs
-  editComment.comment = sanitizeHtml(newComment.comment);
-  editComment.save((err, saved) => {
-    if (err) {
-      res.status(500).send(err);
-    }
-    res.json({ comment: saved });
-  });
+  Comment.findById(req.body.data.id).then(comment => {
+    comment.comment = sanitizeHtml(req.body.data.comment);
+    comment.save((err, saved) => {
+      if (err) {
+        res.status(500).send(err);
+      }
+      Comment.find().sort('-dateAdded').exec((err, comments) => {
+        if (err) {
+          res.status(500).send(err);
+        }
+        res.json({ comments });
+      });
+    });
+  })
 }
 
 /**
@@ -73,7 +77,7 @@ export function editComment(req, res) {
  * @returns void
  */
 export function deleteComment(req, res) {
-  Comment.findOne({ cuid: req.params.cuid }).exec((err, comment) => {
+  Comment.findOne({ _id: req.params.cuid }).exec((err, comment) => {
     if (err) {
       res.status(500).send(err);
     }

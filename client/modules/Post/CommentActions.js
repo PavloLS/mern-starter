@@ -4,6 +4,7 @@ import callApi from '../../util/apiCaller';
 export const ADD_COMMENT = 'ADD_COMMENT';
 export const EDIT_COMMENT = 'EDIT_COMMENT';
 export const DELETE_COMMENT = 'DELETE_COMMENT';
+export const ADD_COMMENTS ='ADD_COMMENTS';
 
 // Export Actions
 export function addComment(data) {
@@ -16,11 +17,11 @@ export function addComment(data) {
 export function addCommentRequest(data) {
   return (dispatch) => {
     return callApi('comments', 'post', {
-      data: {
+      comment: {
         author: data.author,
         comment: data.comment,
       },
-    }).then(res => dispatch(addPost(res.data)));
+    }).then(res => dispatch(addComment(res.comment)));
   };
 }
 
@@ -31,6 +32,14 @@ export function editComment(data) {
   };
 }
 
+export function fetchComments() {
+  return (dispatch) => {
+    return callApi('comments').then(res => {
+      dispatch(addComments(res.comments));
+    });
+  };
+}
+
 export function editCommentRequest(data) {
   return (dispatch) => {
     return callApi('comments', 'put', {
@@ -38,15 +47,14 @@ export function editCommentRequest(data) {
         id: data.id,
         comment: data.comment,
       },
-    }).then(res => dispatch(editComment(res.data)));
+    }).then(res => dispatch(addComments(res.comments)));
   };
 }
 
-export function fetchComments() {
-  return (dispatch) => {
-    return callApi('comments').then(res => {
-      dispatch(addPosts(res.data));
-    });
+export function addComments(comments) {
+  return {
+    type: ADD_COMMENTS,
+    comments,
   };
 }
 
