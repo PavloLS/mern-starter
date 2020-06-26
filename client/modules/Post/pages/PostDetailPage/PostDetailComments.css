@@ -1,0 +1,130 @@
+.comments-title {
+  margin-top: 30px;
+}
+
+.add-comments-title {
+  margin-top: 30px;
+  text-align: center;
+}
+
+.form-comment {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.comments-list-wraapper {
+  min-height: 200px;
+  margin-top: 20px;
+  padding: 10px;
+}
+
+.comments-list-wraapper ul {
+  list-style: none;
+}
+
+.comments-list-wraapper li {
+  padding: 20px;
+  background-color: #f2f2f2;
+  margin-bottom: 20px;
+}
+
+.edit-comment-textarea {
+  width: 100%;
+  border-radius: 5px;
+  font-size: 14px;
+  padding: 10px 15px;
+}
+
+.comment-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 15px;
+}
+
+.comment-top span:first-child {
+  color: #0053ba;
+}
+
+.comment-top span:last-child {
+  color: #7b8077;
+}
+
+.comment-bottom {
+  margin-top: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.comment-bottom span:first-child {
+  margin-right: 10px;
+  color: #0053ba;
+  cursor: pointer;
+}
+
+.comment-bottom span:nth-child(2) {
+  color: red;
+  cursor: pointer;
+}
+
+.no-comments {
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  background-color: #f2f2f2;
+}
+
+.field-name,
+.field-comment {
+  margin-top: 20px;
+}
+
+.field-name input,
+.field-comment textarea {
+  padding: 10px 15px;
+  border-radius: 5px;
+  font-size: 14px;
+  width: 620px;
+  display: flex;
+  flex-direction: column;
+  margin-top: 7px;
+}
+
+button {
+  display: inline-block;
+  border: none;
+  padding: 0.75rem 2.5rem;
+  margin: 0;
+  text-decoration: none;
+  background: #0069ed;
+  color: #ffffff;
+  font-family: sans-serif;
+  font-size: 1rem;
+  cursor: pointer;
+  border-radius: 5px;
+  margin-top: 40px;
+  text-align: center;
+  transition: background 250ms ease-in-out,
+              transform 150ms ease;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+button:hover,
+button:focus {
+  background: #0053ba;
+}
+
+button:focus {
+  outline: 1px solid #fff;
+  outline-offset: -4px;
+}
+
+button:active {
+  transform: scale(0.99);
+}
