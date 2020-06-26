@@ -10,7 +10,10 @@ import sanitizeHtml from 'sanitize-html';
  * @returns void
  */
 export function getComments(req, res) {
-  Comment.find().sort('-dateAdded').exec((err, comments) => {
+  Comment.find({'postId': req.body.post.postId})
+    .sort('-dateAdded')
+    .populate('postId')
+    .exec((err, comments) => {
     if (err) {
       res.status(500).send(err);
     }
@@ -25,7 +28,7 @@ export function getComments(req, res) {
  * @returns void
  */
 export function addComment(req, res) {
-  if (!req.body.comment.author || !req.body.comment.comment) {
+  if (!req.body.comment.author || !req.body.comment.comment || !req.body.comment.postId) {
     res.status(403).end();
   }
 
@@ -34,10 +37,11 @@ export function addComment(req, res) {
   // Let's sanitize inputs
   newComment.author = sanitizeHtml(newComment.author);
   newComment.comment = sanitizeHtml(newComment.comment);
+  newComment.postId = sanitizeHtml(newComment.postId);
   newComment.cuid = cuid();
   newComment.save((err, saved) => {
     if (err) {
-      res.status(500).send(err);
+      return res.status(500).send(err);
     }
     res.json({ comment: saved });
   });
@@ -50,7 +54,7 @@ export function addComment(req, res) {
  * @returns void
  */
 export function editComment(req, res) {
-  if (!req.body.data.id || !req.body.data.comment) {
+  if (!req.body.data.id || !req.body.data.comment || !req.body.data.postId) {
     res.status(403).end();
   }
 
@@ -60,7 +64,7 @@ export function editComment(req, res) {
       if (err) {
         res.status(500).send(err);
       }
-      Comment.find().sort('-dateAdded').exec((err, comments) => {
+      Comment.find({'postId': req.body.data.postId}).sort('-dateAdded').populate('postId').exec((err, comments) => {
         if (err) {
           res.status(500).send(err);
         }

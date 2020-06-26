@@ -16,10 +16,11 @@ export function addComment(data) {
 
 export function addCommentRequest(data) {
   return (dispatch) => {
-    return callApi('comments', 'post', {
+    return callApi('comments/create', 'post', {
       comment: {
         author: data.author,
         comment: data.comment,
+        postId: data.postId
       },
     }).then(res => dispatch(addComment(res.comment)));
   };
@@ -32,9 +33,9 @@ export function editComment(data) {
   };
 }
 
-export function fetchComments() {
+export function fetchComments(data) {
   return (dispatch) => {
-    return callApi('comments').then(res => {
+    return callApi('comments', 'post', {post: data}).then(res => {
       dispatch(addComments(res.comments));
     });
   };
@@ -46,6 +47,7 @@ export function editCommentRequest(data) {
       data: {
         id: data.id,
         comment: data.comment,
+        postId: data.postId
       },
     }).then(res => dispatch(addComments(res.comments)));
   };

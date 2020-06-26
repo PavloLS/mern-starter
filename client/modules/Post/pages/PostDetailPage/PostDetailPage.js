@@ -24,7 +24,7 @@ export function PostDetailPage(props) {
         <p className={styles['post-desc']}>{props.post.content}</p>
       </div>
       <hr />
-      <PostDetailComments />
+      <PostDetailComments postId={props.post._id} />
     </div>
   );
 }

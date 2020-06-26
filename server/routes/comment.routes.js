@@ -3,10 +3,10 @@ import * as CommentController from '../controllers/comment.controller';
 const router = new Router();
 
 // Get all Comment
-router.route('/comments').get(CommentController.getComments);
+router.route('/comments').post(CommentController.getComments);
 
 // Add a new Comment
-router.route('/comments').post(CommentController.addComment);
+router.route('/comments/create').post(CommentController.addComment);
 
 // Adit a comment
 router.route('/comments').put(CommentController.editComment);

@@ -5,9 +5,9 @@ import { addCommentRequest, fetchComments, deleteCommentRequest, editCommentRequ
 import { getComments } from '../../CommentReducer'
 import styles from './PostDetailComments.css'
 
-const PostDetailComments = ({comments, dispatch}) => {
+const PostDetailComments = ({comments, dispatch, postId}) => {
   useEffect(() => {
-    dispatch(fetchComments())
+    dispatch(fetchComments({postId}))
   }, [])
 
   const [state, setState] = useState({
@@ -21,7 +21,8 @@ const PostDetailComments = ({comments, dispatch}) => {
     e.preventDefault()
     const data = {
       author: state.name,
-      comment: state.comment
+      comment: state.comment,
+      postId
     }
     dispatch(addCommentRequest(data))
   }
@@ -29,7 +30,7 @@ const PostDetailComments = ({comments, dispatch}) => {
   const handleChangeField = e => setState({ ...state, [e.target.name]: e.target.value})
 
   const handleEditComment = (id) => {
-    const data = { id, comment: state.editComment }
+    const data = { id, comment: state.editComment, postId }
     dispatch(editCommentRequest(data))
     setState({ ...state, editId: '', editComment: '' })
   }
